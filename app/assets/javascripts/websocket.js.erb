@@ -1,0 +1,60 @@
+var task = {
+  name: 'Start taking advantage of WebSockets',
+  completed: false
+}
+
+var dispatcher = new WebSocketRails('localhost:3000/websocket');
+
+dispatcher.trigger('client_connected', task);
+
+dispatcher.on_open = function(data) {
+  console.log('Connection has been established: ', data);
+  // You can trigger new server events inside this callback if you wish.
+}
+
+dispatcher.bind('liked_post', function(msg) {
+  console.log(msg);
+});
+
+likesChannel = dispatcher.subscribe('likes');
+likesChannel.bind('new', function(post) {
+  console.log('a new post about ' + post.title + ' arrived!');
+});
+
+postsChannel = dispatcher.subscribe('posts');
+postsChannel.bind('new', function(post) {
+  var blogPost = ""
+
+  blogPost += "<div class='blog-post'>";
+  blogPost += "<h2 class='blog-post-title'>" + post.title + "</h2>";
+  blogPost += "<p class='blog-post-meta'>" + moment(post.created_at) + " by ";
+  blogPost += "<a href='#'>"+ post.author +"</a></p>";
+  blogPost += "<p>"+post.body+"</p>";
+  blogPost += "</div>";
+
+  $("#blog-list").prepend(blogPost);
+});
+
+$(document).ready(function() {
+  $("#submit").on("click", function() {
+    var $textarea = $('#body');
+    var $title    = $('#title');
+    var $name     = $('#name');
+    var body  = $textarea.val();
+    var title = $title.val();
+    var name  = $name.val();
+
+    if (body.length > 0) {
+      var post = {
+        title: title,
+        body: body,
+        author: name || "Anonymous"
+      }
+
+      dispatcher.trigger('create_post', post);
+      $textarea.val("");
+      $title.val("");
+      $name.val("");
+    }
+  });
+});
