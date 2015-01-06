@@ -4,10 +4,10 @@ function updateClientCount(count) {
 
 var URI;
 
-<% if @on_production %>
-  URI = 'obscure-oasis-1296.herokuapp.com/websocket';
-<% else %>
+<% if Rails.env == 'development' %>
   URI = 'localhost:3000/websocket';
+<% else %>
+  URI = 'obscure-oasis-1296.herokuapp.com/websocket';
 <% end %>
 
 var dispatcher = new WebSocketRails(URI);
