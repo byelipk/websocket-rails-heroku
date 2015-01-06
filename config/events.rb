@@ -4,8 +4,9 @@ WebsocketRails::EventMap.describe do
   # actions will be executed in the order they were subscribed.
   #
   # Uncomment and edit the next line to handle the client connected event:
-    subscribe :client_connected, to: ChatController, with_method: :handle_connection
-    subscribe :liked_post,       to: ChatController, with_method: :liked_post
+    subscribe :client_connected,    to: ChatController, with_method: :client_connected
+    subscribe :client_disconnected, to: ChatController, with_method: :client_disconnected
+
     subscribe :create_post,      to: ChatController, with_method: :create_post
 
 

@@ -1,25 +1,30 @@
-var task = {
-  name: 'Start taking advantage of WebSockets',
-  completed: false
+function updateClientCount(count) {
+  $("#client-count").text(count);
 }
 
-// var dispatcher = new WebSocketRails('localhost:3000/websocket');
-var dispatcher = new WebSocketRails('obscure-oasis-1296.herokuapp.com/websocket');
+var URI;
 
-dispatcher.trigger('client_connected', task);
+<% if @on_production %>
+  URI = 'obscure-oasis-1296.herokuapp.com/websocket';
+<% else %>
+  URI = 'localhost:3000/websocket';
+<% end %>
+
+var dispatcher = new WebSocketRails(URI);
 
 dispatcher.on_open = function(data) {
+  // You can trigger new server events inside this callback if you wish
+  // immediately after the connection is made.
   console.log('Connection has been established: ', data);
-  // You can trigger new server events inside this callback if you wish.
 }
 
-dispatcher.bind('liked_post', function(msg) {
-  console.log(msg);
+clientsChannel = dispatcher.subscribe('clients');
+clientsChannel.bind('client-count', function(count) {
+  updateClientCount(count);
 });
 
-likesChannel = dispatcher.subscribe('likes');
-likesChannel.bind('new', function(post) {
-  console.log('a new post about ' + post.title + ' arrived!');
+dispatcher.bind('welcome', function(data) {
+  updateClientCount(data);
 });
 
 postsChannel = dispatcher.subscribe('posts');

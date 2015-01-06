@@ -1,22 +1,33 @@
 class ChatController < WebsocketRails::BaseController
-  def initialize_session
-    # perform application setup here
-    controller_store[:message_count] = 0
+
+  def client_connected
+    increment_client_counter
+    WebsocketRails[:clients].trigger 'client-count', controller_store[:client_counter]
+    send_message :welcome, controller_store[:client_counter]
   end
 
-  def handle_connection
-    puts "The connection is being handled!"
-  end
-
-  def liked_post
-    send_message :liked_post, "Thanks for liking my post: #{message}"
-
-    WebsocketRails[:likes].trigger 'new', message
+  def client_disconnected
+    decrement_client_counter
+    WebsocketRails[:clients].trigger 'client-count', controller_store[:client_counter]
   end
 
   def create_post
     post = Post.create(message)
-    
+
     WebsocketRails[:posts].trigger 'new', post
+  end
+
+  private
+
+  def increment_client_counter
+    if controller_store[:client_counter]
+      controller_store[:client_counter] += 1
+    else
+      controller_store[:client_counter] = 1
+    end
+  end
+
+  def decrement_client_counter
+    controller_store[:client_counter] -= 1
   end
 end
