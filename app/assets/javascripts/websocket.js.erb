@@ -3,7 +3,8 @@ var task = {
   completed: false
 }
 
-var dispatcher = new WebSocketRails('localhost:3000/websocket');
+// var dispatcher = new WebSocketRails('localhost:3000/websocket');
+var dispatcher = new WebSocketRails('obscure-oasis-1296.herokuapp.com/websocket');
 
 dispatcher.trigger('client_connected', task);
 
