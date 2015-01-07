@@ -7,7 +7,7 @@ WebsocketRails::EventMap.describe do
     subscribe :client_connected,    to: ChatController, with_method: :client_connected
     subscribe :client_disconnected, to: ChatController, with_method: :client_disconnected
 
-    subscribe :create_post,      to: ChatController, with_method: :create_post
+    subscribe :new_post, to: ChatController, with_method: :create_post
 
 
   # Here is an example of mapping namespaced events:

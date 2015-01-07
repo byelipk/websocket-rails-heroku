@@ -2,6 +2,28 @@ function updateClientCount(count) {
   $("#client-count").text(count);
 }
 
+function newNotification() {
+  $.titleAlert("New Message!", {
+    requireBlur:true,
+    stopOnFocus:true,
+    duration:20000,
+    interval:1500
+  });
+}
+
+function prependPost(post) {
+  var blogPost = ""
+
+  blogPost += "<div class='blog-post'>";
+  blogPost += "<h2 class='blog-post-title'>" + post.title + "</h2>";
+  blogPost += "<p class='blog-post-meta'>" + moment(post.created_at) + " by ";
+  blogPost += "<a href='#'>"+ post.author +"</a></p>";
+  blogPost += "<p>"+post.body+"</p>";
+  blogPost += "</div>";
+
+  $("#blog-list").prepend(blogPost);
+}
+
 var URI;
 
 <% if Rails.env == 'development' %>
@@ -28,18 +50,11 @@ dispatcher.bind('welcome', function(data) {
 });
 
 postsChannel = dispatcher.subscribe('posts');
-postsChannel.bind('new', function(post) {
-  var blogPost = ""
-
-  blogPost += "<div class='blog-post'>";
-  blogPost += "<h2 class='blog-post-title'>" + post.title + "</h2>";
-  blogPost += "<p class='blog-post-meta'>" + moment(post.created_at) + " by ";
-  blogPost += "<a href='#'>"+ post.author +"</a></p>";
-  blogPost += "<p>"+post.body+"</p>";
-  blogPost += "</div>";
-
-  $("#blog-list").prepend(blogPost);
+postsChannel.bind('new_post', function(post) {
+  prependPost(post);
+  newNotification();
 });
+
 
 $(document).ready(function() {
   $("#submit").on("click", function() {
@@ -57,7 +72,9 @@ $(document).ready(function() {
         author: name || "Anonymous"
       }
 
-      dispatcher.trigger('create_post', post);
+      // Calling trigger on the dispatcher
+      // and on the channel produce different results.
+      dispatcher.trigger('new_post', post);
       $textarea.val("");
       $title.val("");
       $name.val("");

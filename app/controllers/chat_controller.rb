@@ -12,9 +12,15 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def create_post
-    post = Post.create(message)
+    puts "Saving post..."
+    post = Post.new(message)
 
-    WebsocketRails[:posts].trigger 'new', post
+    if post.save
+      puts "Saved post!"
+      WebsocketRails[:posts].trigger 'new_post', post
+    else
+      puts "Failed to saved post"
+    end
   end
 
   private
