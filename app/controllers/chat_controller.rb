@@ -14,6 +14,7 @@ class ChatController < WebsocketRails::BaseController
   def create_post
     puts "Saving post..."
     post = Post.new(message)
+    post.cook
 
     if post.save
       puts "Saved post!"

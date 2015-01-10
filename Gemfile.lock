@@ -36,6 +36,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    annotate (2.6.5)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
     arel (6.0.0)
     autoprefixer-rails (4.0.2.2)
       execjs
@@ -140,6 +143,7 @@ GEM
     rake (10.4.2)
     rdoc (4.2.0)
       json (~> 1.4)
+    redcarpet (3.2.2)
     redis (3.0.4)
     redis-objects (1.0.1)
       redis (>= 3.0.2)
@@ -199,12 +203,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   autoprefixer-rails
   bootstrap-sass
   byebug
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
+  loofah
   momentjs-rails
   pg
   pry
@@ -212,6 +218,7 @@ DEPENDENCIES
   pry-stack_explorer
   rails (= 4.2.0)
   rails_12factor
+  redcarpet (= 3.2.2)
   redis
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)

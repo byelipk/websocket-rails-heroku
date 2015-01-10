@@ -62,7 +62,13 @@ group :development, :test do
   gem 'pry-stack_explorer'
 end
 
+group :development do
+  gem 'annotate'
+end
+
 group :production do
   gem 'pg'
   gem 'rails_12factor'
 end
+gem 'redcarpet', '3.2.2'
+gem 'loofah'
