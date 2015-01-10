@@ -18,7 +18,7 @@ function prependPost(post) {
   blogPost += "<h2 class='blog-post-title'>" + post.title + "</h2>";
   blogPost += "<p class='blog-post-meta'>" + moment(post.created_at) + " by ";
   blogPost += "<a href='#'>"+ post.author +"</a></p>";
-  blogPost += "<p>"+post.body+"</p>";
+  blogPost += post.body;
   blogPost += "</div>";
 
   $("#blog-list").prepend(blogPost);
